@@ -1,4 +1,4 @@
 # lispyy
 lispy variations
 
-The conception of lispy is inspired. lispyy explores some small variations to lispy's behavior.
+The conception of lispy is inspired. lispyy explores some variations and extensions to lispy's default behavior.
