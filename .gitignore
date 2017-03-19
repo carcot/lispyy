@@ -1,0 +1,15 @@
+\#*\#
+*~
+/auto-save-list/
+/.backup/
+#/.backup/recentf.*
+/*.data
+/*.elc
+#/elpa/
+/Lispyy
+/project-explorer-cache
+/projectile-bookmarks.eld
+/projectile.cache
+/recentf
+/semanticdb/
+#/.snippets/
