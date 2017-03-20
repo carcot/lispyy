@@ -6,6 +6,8 @@ The conception of `lispy` is inspired.
 
 ## Introduction
 
+## Three examples
+
 ## Some keybindings
 
 ## Navigation
