@@ -4,6 +4,8 @@
 (setq debug-on-error t)
 ;; (setq lispy-eval-display-style 'overlay)
 
+(setq lispy-delete-backward-recenter nil)
+
 ;;;
 ;;;  Lisp syntax predicates
 ;;;
@@ -19,7 +21,7 @@
     (if pos (goto-char pos))
     (msg-- "lispyy-in-string-p:")
     (msg-- (and (lispy--in-string-or-comment-p)
-               (lispy--in-string-p)))))
+                (lispy--in-string-p)))))
 
 (defun lispyy-in-comment-p (&optional pos)
   "Test if point is inside a comment (corrected)."
@@ -28,7 +30,7 @@
     (if pos (goto-char pos))
     (msg-- "lispyy-in-comment-p:")
     (msg-- (and (lispy--in-string-or-comment-p)
-               (lispy--in-comment-p))))) ;  comment
+                (lispy--in-comment-p))))) ;  comment
 
 (defun lispyy-in-string-or-comment-p (&optional pos)
   "TODO: documentation" ;;  comment
@@ -37,7 +39,7 @@
     (if pos (goto-char pos))
     (msg-- "lispyy-in-string-or-comment-p:")
     (msg-- (or (lispyy-in-string-p)
-              (lispyy-in-comment-p)))))
+               (lispyy-in-comment-p)))))
 
 ;;;;
 ;;;;  String predicates
@@ -305,13 +307,6 @@
   (msg (and (lispyy-bolp)
             (lispyy-code-to-right-p))))
 
-;; (defun lispyy-after-code-p ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (msg (and (lispyy-code-to-left-p)
-;;             (or (lispyy-eolp)
-;;                 (lispyy-before-comment-p)))))
-
 (defun lispyy-eocp (&optional pos)
   "TODO: documentation"
   (interactive)
@@ -320,16 +315,6 @@
     (let ((pt (point)))
       (lispyy-end-of-code)
       (= (point) pt))))
-
-;; (defun lispyy-on-line-with-code-p (&optional pos)   ;;  test
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (msg (save-excursion
-;;          (if pos (goto-char pos))
-;;          (if (lispyy-line-has-comment-p)
-;;              (lispyy-beginning-of-comment)
-;;            (end-of-line))
-;;          (msg-- (looking-back-on-line "[^ ] *")))))
 
 (defun lispyy-past-code-p (&optional pos)   ;;  test
   "TODO: documentation"
@@ -371,7 +356,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (and (lispyy-past-code-p)
-               (not (lispyy-in-comment-p))))))
+                (not (lispyy-in-comment-p))))))
 
 (defun lispyy-after-code-with-no-comment-p (&optional pos)
   "TODO: documentation"
@@ -379,7 +364,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (and (lispyy-after-code-p)
-               (lispyy-eolp)))))   ;  abc
+                (lispyy-eolp)))))   ;  abc
 
 (defun lispyy-after-code-with-comment-p (&optional pos)
   "TODO: documentation"
@@ -387,7 +372,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (and (lispyy-after-code-p)
-               (lispyy-line-has-comment-p)))))   ;  abc
+                (lispyy-line-has-comment-p)))))   ;  abc
 
 (defun lispyy-after-code-before-comment-p (&optional pos)
   "TODO: documentation"
@@ -395,7 +380,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (and (lispyy-after-code-p)
-               (lispyy-before-comment-p)))))
+                (lispyy-before-comment-p)))))
 
 ;;;;
 ;;;;  List predicates
@@ -458,10 +443,9 @@
   (interactive)
   (save-excursion
     (if pos (goto-char pos))
-    (and (lispyy-bolp)
-         (lispyy-eolp)
-         ;; (not (lispyy-in-string-p))
-         )))
+    (and (not (lispyy-in-string-p))
+         (lispyy-bolp)
+         (lispyy-eolp))))
 
 ;; (defun current-line-empty-p (&optional pos)
 ;;   (save-excursion
@@ -479,7 +463,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (and (not (lispyy-in-string-or-comment-p))
-               (lispy-left-p)))))
+                (lispy-left-p)))))
 
 (defun lispyy-right-p (&optional pos)
   "TODO: documentation"
@@ -487,7 +471,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (and (not (lispyy-in-string-or-comment-p))
-               (lispy-right-p)))))
+                (lispy-right-p)))))
 
 (defun lispyy-left-q (&optional pos)
   "TODO: documentation"
@@ -495,7 +479,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (and (lispyy-before-string-p)
-               (looking-at-p "\"")))))
+                (looking-at-p "\"")))))
 
 (defun lispyy-right-q (&optional pos)
   "TODO: documentation"
@@ -503,7 +487,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (and (lispyy-after-string-p)
-               (looking-back "\"" (1- (point)))))))
+                (looking-back "\"" (1- (point)))))))
 
 (defun lispyy-lispy-p (&optional pos)
   "TODO: documentation"
@@ -511,7 +495,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (or (lispyy-left-p)
-              (lispyy-right-p)))))
+               (lispyy-right-p)))))
 
 (defun lispyy-lispy-q (&optional pos)
   "TODO: documentation"
@@ -519,7 +503,7 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (or (lispyy-left-q)
-              (lispyy-right-q)))))
+               (lispyy-right-q)))))
 
 (defun lispyy-special-p (&optional pos)
   "TODO: documentation"
@@ -527,8 +511,8 @@
   (save-excursion
     (if pos (goto-char pos))
     (msg-- (or (lispyy-lispy-p)
-              (lispyy-lispy-q)
-              (bolp)))))
+               (lispyy-lispy-q)
+               (bolp)))))
 
 (defun lispyy-after-lispy-left-p (&optional pos)
   "TODO: documentation"
@@ -1477,10 +1461,10 @@
   "TODO: documentation"
   (interactive)
   (if (save-excursion
-        (while (and (not (looking-at-p "(defun *\\|(defun$"))
+        (while (and (not (looking-at-p "(defun$\\|(defun +"))
                     (lispy-left 1)))
-        (looking-at-p "(defun *\\|(defun$"))
-      (while (and (not (looking-at-p "(defun *\\|(defun$"))
+        (looking-at-p "(defun$\\|(defun +"))
+      (while (and (not (looking-at-p "(defun$\\|(defun +"))
                   (lispy-left 1)))))
 
 ;;;;
@@ -1531,32 +1515,30 @@
 (defun lispyy-left ()
   "TODO: documentation"
   (interactive)
-  (cond ((lispy-right-p)
-         (let ((not-lispyy-flow-p      (not (lispyy-flow-p)))
-               (not-lispyy-different-p (not (lispyy-different-p))))
-           (cond ((and not-lispyy-flow-p not-lispyy-different-p) nil)
-                 (not-lispyy-flow-p      (lispy-different))
-                 (not-lispyy-different-p (lispy-flow 1))
-                 (t
-                  (goto-char (max (position-of 'lispy-flow)
-                                  (position-of 'lispy-different)))))))
-        ((lispy-left-p) (special-lispy-left))
-        (t (special-lispy-left))))
+  (cond ((lispy-right-p) (let ((not-lispyy-flow-p      (not (lispyy-flow-p)))
+                               (not-lispyy-different-p (not (lispyy-different-p))))
+                           (cond ((and not-lispyy-flow-p
+                                       not-lispyy-different-p)  nil)
+                                 (not-lispyy-flow-p            (lispy-different))
+                                 (not-lispyy-different-p       (lispy-flow 1))
+                                 (t                            (goto-char (max (position-of 'lispy-flow)
+                                                                               (position-of 'lispy-different)))))))
+        ((lispy-left-p)  (special-lispy-left))
+        (t               (special-lispy-left))))
 
 (defun lispyy-right ()
   "TODO: documentation"
   (interactive)
   (cond ((lispy-right-p) (special-lispy-right))
-        ((lispy-left-p)
-         (let ((not-lispyy-flow-p      (not (lispyy-flow-p)))
-               (not-lispyy-different-p (not (lispyy-different-p))))
-           (cond ((and not-lispyy-flow-p not-lispyy-different-p) nil)
-                 (not-lispyy-flow-p      (lispy-different))
-                 (not-lispyy-different-p (lispy-flow 1))
-                 (t
-                  (goto-char (min (position-of 'lispy-flow)
-                                  (position-of 'lispy-different)))))))
-        (t (special-lispy-right))))
+        ((lispy-left-p)  (let ((not-lispyy-flow-p      (not (lispyy-flow-p)))
+                               (not-lispyy-different-p (not (lispyy-different-p))))
+                           (cond ((and not-lispyy-flow-p
+                                       not-lispyy-different-p)  nil)
+                                 (not-lispyy-flow-p            (lispy-different))
+                                 (not-lispyy-different-p       (lispy-flow 1))
+                                 (t                            (goto-char (min (position-of 'lispy-flow)
+                                                                               (position-of 'lispy-different)))))))
+        (t               (special-lispy-right))))
 
 (defun lispyy-up ()
   "TODO: documentation"
@@ -1564,13 +1546,12 @@
   (if (looking-at-p hl-header-block-re)
       (lispyy-header-prev 1)
     (cond ((lispy-right-p) (lispy-up 1))
-          ((lispy-left-p)
-           (let ((pt (point)))
-             (lispy-up 1)
-             (when (= (line-number-at-pos)
-                      (line-number-at-pos pt))
-               (lispy-left 1))))
-          (t (special-lispy-up)))))
+          ((lispy-left-p)  (let ((pt (point)))
+                             (lispy-up 1)
+                             (when (= (line-number-at-pos)
+                                      (line-number-at-pos pt))
+                               (lispy-left 1))))
+          (t               (special-lispy-up)))))
 
 (defun lispyy-down ()
   "TODO: documentation"
@@ -1578,16 +1559,15 @@
   (if (looking-at-p hl-header-block-re)
       (lispyy-header-next 1)
     (cond ((lispy-right-p) (special-lispy-down))
-          ((lispy-left-p)
-           (let ((pt (point)))
-             (lispy-down 1)
-             (when (= (line-number-at-pos)
-                      (line-number-at-pos pt))
-               (when (lispy-flow 1)
-                 (while (and (= (line-number-at-pos)
-                                (line-number-at-pos pt))
-                             (lispy-down 1)))))))
-          (t (special-lispy-down)))))
+          ((lispy-left-p)  (let ((pt (point)))
+                             (lispy-down 1)
+                             (when (= (line-number-at-pos)
+                                      (line-number-at-pos pt))
+                               (when (lispy-flow 1)
+                                 (while (and (= (line-number-at-pos)
+                                                (line-number-at-pos pt))
+                                             (lispy-down 1)))))))
+          (t               (special-lispy-down)))))
 
 ;;;;
 ;;;;  lispyy-jump-closing-parens
@@ -1610,6 +1590,40 @@
   ;;                  'eolp 'lispyy-nop)
   (while (looking-at-p " *)")
     (right-char)))
+
+;;;;
+;;;;  lispyy-ace-parens
+;;;;
+
+(defun lispyy-ace-parens (&optional arg)
+  "Jump to a parenthesis within the current defun.
+ARG can extend the bounds beyond the current defun."
+  (interactive "p")
+  (setq arg (or arg 1))
+  (lispy--remember)
+  (deactivate-mark)
+  (let ((avy-keys lispy-avy-keys)
+        (bnd      (if (eq arg 1)
+                      (save-excursion
+                        (lispy--out-backward 50)
+                        (lispy--bounds-dwim))
+                    (cons (window-start)
+                          (window-end nil t)))))
+    (avy-with lispy-ace-parens
+      (lispy--avy-do
+       ;; lispy-left
+       "[()]"
+       bnd
+       (lambda () (not (lispy--in-string-or-comment-p)))
+       ;; lispy-avy-style-paren
+       'pre))
+    (if (looking-at-p ")")
+        (right-char))))
+
+(defun lispyy-ace-parens-window (&optional arg)
+  "Jump to a parenthesis within the current windows."
+  (interactive "p")
+  (lispyy-ace-parens 0))
 
 ;;;
 ;;;  Editing
@@ -1722,19 +1736,6 @@ Second line"
                                                                             (kill-line)
                                                                             (lispyy-dedent-to-point))))))))
 
-;; (defun lispy-different ()
-;;   "Switch to the different side of current sexp."
-;;   (interactive)
-;;   (cond ((and (region-active-p)
-;;               (not (= (region-beginning) (region-end))))
-;;          (exchange-point-and-mark))
-;;         ((lispy-right-p)
-;;          (backward-list))
-;;         ((lispy-left-p)
-;;          (forward-list))
-;;         (t
-;;          (user-error "Unexpected"))))
-
 (defun lispyy-different ()
   "TODO: documentation"
   (interactive)
@@ -1781,30 +1782,6 @@ Second line"
                                                                               (append-next-kill)
                                                                               (kill-line)
                                                                               (lispyy-dedent-to-point)))))))))
-
-;; (defun lispyy-kill-line-of-code-end-position-0 ()   ;;  comment
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (let ((pos (point))
-;;         end-of-kill-pos)
-;;     (lispyy-end-of-code)
-;;     (let ((limit-pos (point)))
-;;       (goto-char pos)
-;;       (let ((focus-pos pos))
-;;         (while (and (<= focus-pos limit-pos)
-;;                     (not end-of-kill-pos))
-;;           (when (and (lispy-right-p)
-;;                      (> focus-pos pos))
-;;             (if (< (lispyy-position-other-end) pos)
-;;                 (setq end-of-kill-pos (1- focus-pos))))
-;;           (when (lispy-left-p)
-;;             (if (> (lispyy-position-other-end) limit-pos)
-;;                 (setq end-of-kill-pos (lispyy-position-other-end))))
-;;           (lispyy-next)
-;;           (setq focus-pos (point))))
-;;       (goto-char pos)
-;;       (setq end-of-kill-pos (or end-of-kill-pos (line-end-position)))
-;;       (msg-- end-of-kill-pos))))
 
 '((a
    b
@@ -1965,61 +1942,28 @@ Second line"
   "TODO: documentation"
   (interactive)
   (save-excursion
-    (let ((line 1))
+  (let ((line 1))
       (while (<= line lines)
         (move-to-column column t)
         (if (eolp)
-            (insert semicolons)
-          (insert (concat semicolons " ")))
+    (insert semicolons)
+  (insert (concat semicolons " ")))
         (forward-line)
         (setq line (1+ line))))))
 
 ;;;;
-;;;;  Lists
-;;;;
-
-;; (defun lispyy-comment-list ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (save-excursion
-;;     (let (comment/line/column)
-;;       (if (lispy-bolp)
-;;           (back-to-indentation))
-;;       (if (lispyy-comment-after-list-p)
-;;           (setq comment/line/column (lispyy-save-comment-after-list)))
-;;       (lispyy-insert-newline-after-cuddled-sublist)
-;;       (when comment/line/column
-;;         (lispyy-restore-comment-after-list comment/line/column)
-;;         (setq comment/line/column nil))
-;;       (let ((last-line-number (lispyy-last-line-number-of-list)))
-;;         (lispyy-comment-list-helper last-line-number))))) ;  comment
-
-;; (defun lispyy-comment-list-helper (last-line)
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (let ((pt (point))
-;;         (col (current-column)))
-;;     (while (<= (line-number-at-pos) last-line)
-;;       (move-to-column col t)
-;;       (if (eolp)
-;;           (insert ";;")
-;;         (insert ";; "))
-;;       (forward-line))
-;;     (back-to-indentation)))
-
-;;;;
-;;;;  Code
+;;;;  sexps
 ;;;;
 
 (defun lispyy-comment-sexp ()
   "TODO: documentation"
   (interactive)
   (save-excursion
-    (let* ((end-of-kill-pos  (lispyy-kill-line-of-code-end-position))
+  (let* ((end-of-kill-pos  (lispyy-kill-line-of-code-end-position))
            (last-line-number (line-number-at-pos end-of-kill-pos))
            comment/line/column)
       (if (lispy-bolp)
-          (back-to-indentation))
+    (back-to-indentation))
       ;; (if (lispyy-comment-after-pos-p end-of-kill-pos)
       ;;     (setq comment/line/column (lispyy-save-comment-after-pos end-of-kill-pos)))
       ;; (if (lispyy-before-beginning-of-comment-p end-of-kill-pos)
@@ -2027,9 +1971,9 @@ Second line"
       ;; (if (lispyy-on-line-with-comment-p end-of-kill-pos)
       ;;     (setq comment/line/column (lispyy-save-comment-after-pos end-of-kill-pos)))
       (if (lispyy-line-has-comment-p end-of-kill-pos)
-          (setq comment/line/column (lispyy-save-comment-after-pos end-of-kill-pos)))
+    (setq comment/line/column (lispyy-save-comment-after-pos end-of-kill-pos)))
       (if (not (lispyy-eocp end-of-kill-pos))
-          (lispyy-insert-newline-at-pos end-of-kill-pos))
+    (lispyy-insert-newline-at-pos end-of-kill-pos))
       (when comment/line/column
         (lispyy-restore-comment comment/line/column)
         (setq comment/line/column nil))
@@ -2046,24 +1990,6 @@ Second line"
         (insert ";; "))
       (forward-line))
     (back-to-indentation)))
-
-;; (defun lispyy-comment-sexp ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (save-excursion
-;;     (let* ((end-of-kill-pos (lispyy-kill-line-of-code-end-position))
-;;            (last-line-number (line-number-at-pos end-of-kill-pos))
-;;            comment/line/column)
-;;       ;; (if (lispy-bolp)
-;;       ;;     (back-to-indentation))
-;;       (if (lispyy-comment-after-pos-p end-of-kill-pos)
-;;           (setq comment/line/column (lispyy-save-comment-after-pos end-of-kill-pos)))
-;;       (if (not (lispyy-eocp end-of-kill-pos))
-;;           (lispyy-insert-newline-at-pos end-of-kill-pos))
-;;       (when comment/line/column
-;;         (lispyy-restore-comment comment/line/column)
-;;         (setq comment/line/column nil))
-;;       (lispyy-comment-sexp-helper last-line-number))))
 
 ;;;;
 ;;;;  Uncommenting
@@ -2101,23 +2027,6 @@ Second line"
               (move-to-column column))
             (cons column (cons semicolons lines)))))))
 
-;; (defun lispyy-commented-sexp-lines ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (save-buffer-state
-;;     (let ((pt (point))
-;;           (column (current-indentation))
-;;           (prefix ";+ \\|;+$"))
-;;       (move-to-column column)
-;;       (let* ((lines (cddr (lispyy-uncomment-block)))
-;;              (end-of-kill-pos (lispyy-kill-line-of-code-end-position)))
-;;         (goto-char end-of-kill-pos)
-;;         (if (and (<= (line-number-at-pos end-of-kill-pos)
-;;                      (+ (line-number-at-pos pt) lines -1))
-;;                  (lispyy-eocp))
-;;             (let ((commented-sexp-lines (count-lines pt end-of-kill-pos)))
-;;               commented-sexp-lines))))))
-
 '(global-set-key (kbd "M-1") (lambda ()
                                (interactive)
                                (msg-- (lispyy-commented-sexp-lines))))
@@ -2153,33 +2062,6 @@ Second line"
                      (+ (line-number-at-pos pt) lines -1))
                  (lispyy-eocp)))))))
 
-;; (defun lispyy-uncomment-sexp ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (save-excursion
-;;     (let ((pt (point))
-;;           (column (current-indentation))
-;;           (prefix ";+ \\|;+$"))
-;;       (move-to-column column)
-;;       (let* ((column/semicolons/lines (lispyy-uncomment-block))
-;;              (column     (car column/semicolons/lines))
-;;              (semicolons (cadr column/semicolons/lines))
-;;              (lines      (cddr column/semicolons/lines))
-;;              (end-of-kill-pos (lispyy-kill-line-of-code-end-position)))
-;;         (goto-char end-of-kill-pos)
-;;         (if (and (<= (line-number-at-pos end-of-kill-pos)
-;;                      (+ (line-number-at-pos pt) lines -1))
-;;                  (lispyy-eocp))
-;;             (progn (forward-line)
-;;                    (let ((uncommented-lines (count-lines pt end-of-kill-pos)))
-;;                      (lispyy-comment-lines column semicolons (- lines uncommented-lines 1)))
-;;                    (goto-char end-of-kill-pos)
-;;                    (lispyy-save-trailing-comment)
-;;                    (lispyy-cuddle-parens)
-;;                    (lispyy-restore-trailing-comment))
-;;           (goto-char pt)
-;;           (lispyy-comment-lines column semicolons (1- lines)))))))
-
 (defun lispyy-uncomment-sexp ()
   "TODO: documentation"
   (interactive)
@@ -2214,23 +2096,19 @@ Second line"
 (defun lispyy-comment-dwim ()
   "TODO: documentation"
   (interactive)
-  (cond ((region-active-p)
-         (lispy-comment))
-        ((lispyy-on-whole-line-comment-p)
-         ;; (lispyy-uncomment-line)
-         (lispyy-uncomment-sexp))
+  (cond ((region-active-p)                    (lispy-comment))
+        ((lispyy-on-whole-line-comment-p)     (progn ;; (lispyy-uncomment-line)
+                                                (lispyy-uncomment-sexp)))
         ;;  now this is an end-of-line comment ...
-        ((lispyy-before-or-in-comment-p)
-         (lispyy-end-of-code)
-         (let ((kill-whole-line nil))
-           (kill-line)))
+        ((lispyy-before-or-in-comment-p)      (progn
+                                                (lispyy-end-of-code)
+                                                (let ((kill-whole-line nil))
+                                                  (kill-line))))
         ;;  we're commenting now instead of uncommenting ...
         ((and (lispyy-bolp)
-              (not (lispyy-line-has-code-p)))
-         (insert ";;  "))
-        ((lispyy-eolp)
-         (insert "   ;;  "))
-        (t (lispyy-comment-sexp))))
+              (not (lispyy-line-has-code-p))) (insert ";;  "))
+        ((lispyy-eolp)                        (insert "   ;;  "))
+        (t                                    (lispyy-comment-sexp))))
 
 (defvar lispyy-saved-comment/line/column)
 
@@ -2409,20 +2287,7 @@ Second line"
           ;;  not after code and not commented code
           (t                                    (progn (msg- "lispyy-kill-comment: t")
                                                        (let ((kill-whole-line nil))
-                                                         (kill-line 1))))))
-  ;; (cond ((lispyy-after-code-before-comment-p)
-  ;;        (if (not (eolp))
-  ;;            (let ((kill-whole-line nil))
-  ;;              (kill-line))))
-  ;;       ((looking-at-p " *;; +(")
-  ;;        (msg-- "lispyy-kill-comment -> lispyy-kill-commented-sexp")
-  ;;        (lispyy-kill-commented-sexp))
-  ;;       ((lisppy-looking-at-commented-sexp-p)
-  ;;        (lispyy-kill-commented-sexp))
-  ;;       (t
-  ;;        (let ((kill-whole-line nil))
-  ;;          (kill-line))))
-  )
+                                                         (kill-line 1)))))))
 
 (defun lispyy-kill-line-of-comment ()
   "TODO: documentation"
@@ -2457,33 +2322,12 @@ Second line"
   (- (line-number-at-pos)
      (line-number-at-pos (window-start))))
 
-;; (defun lispyy-window-line ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (let ((window-line0 (count-lines (window-start) (point)))
-;;         (window-line1 (- (line-number-at-pos) (line-number-at-pos (window-start)))))
-;;     (if (/= window-line0 window-line1)
-;;         (error "window-line calculation methods not equal."))
-;;     (- (line-number-at-pos) (line-number-at-pos (window-start)))
-;;     ;; window-line1
-;;     ))
-
 (defun lispyy-sexp-height ()
   "TODO: documentation"
   (interactive)
   (let* ((sexp-bounds (lispyy-bounds-list))
          (sexp-height (count-lines (car sexp-bounds) (cdr sexp-bounds))))
     (msg-- sexp-height)))
-
-;; (defun lispyy-center-sexp-line ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (let ((window-height (window-body-height))
-;;         (sexp-height   (lispyy-sexp-height)))
-;;     (cond ((lispy-right-p)
-;;            (- window-height (/ (- window-height sexp-height) 2) 1))
-;;           ((lispy-left-p)
-;;            (- (/ window-height 2) (/ sexp-height 2))))))
 
 (defun lispyy-next-view-position ()
   "TODO: documentation"
@@ -2507,15 +2351,17 @@ Second line"
   (interactive)
   (recenter (lispyy-next-view-position)))
 
-(defun lispyy-view ()
+(defun lispyy-view-0 ()
   "TODO: documentation"
   (interactive)
   (lispyy-update-original-view-position)
-  (let ((next-view-position (lispyy-next-view-position)))
-    (recenter next-view-position)
-    (if (= next-view-position
-           (lispyy-original-view-position))
-        (error "Original view position."))))
+  (if (not (lispyy-repeated-command-p))
+      (recenter (lispyy-center-view-position))
+    (let ((next-view-position (lispyy-next-view-position)))
+      (recenter next-view-position)
+      (if (= next-view-position
+             (lispyy-original-view-position))
+          (error "Original view position.")))))
 
 '(remove-duplicates (sort '(4 8 21 17 33 7 21 7) '<)
                     :test '=
@@ -2543,9 +2389,7 @@ Second line"
   (interactive)
   (save-excursion
     (if (not (lispy-left-p)) (lispy-backward 1))
-    (let (;; (window-line (count-lines (window-start) (point)))
-          ;; (window-line (- (line-number-at-pos) (line-number-at-pos (window-start))))
-          (window-line (lispyy-window-line)))
+    (let ((window-line (lispyy-window-line)))
       (= window-line 0))))
 
 (defun lispyy-sexp-centered-p ()
@@ -2555,14 +2399,10 @@ Second line"
     (let ((window-height (window-body-height))
           (sexp-height   (lispyy-sexp-height))
           (window-line   (lispyy-window-line)))
-      (cond ((lispy-right-p)
-             (= window-line
-                ;; (msg-- (- window-height (/ (- window-height sexp-height) 2) 1))
-                (msg-- (lispyy-center-view-position))))
-            ((lispy-left-p)
-             (= window-line
-                ;; (msg-- (- (/ window-height 2) (/ sexp-height 2)))
-                (msg-- (lispyy-center-view-position))))))))
+      (cond ((lispy-right-p) (= window-line
+                                (msg-- (lispyy-center-view-position))))
+            ((lispy-left-p)  (= window-line
+                                (msg-- (lispyy-center-view-position))))))))
 
 (defun lispyy-sexp-at-bottom-p ()
   "TODO: documentation"
@@ -2713,75 +2553,7 @@ Second line"
   (interactive)
   (recenter (lispyy-original-view-position)))
 
-;; (defun lispyy-view-2 ()
-;;   "Center sexp, move to top, move to bottom, move to original position, repeat."
-;;   (interactive "p")
-;;   (let* ((window-height (window-body-height))
-;;          (sexp-height (lispyy-sexp-height))
-;;          (window-line (lispyy-window-line)))
-;;     (lispyy-update-original-view-position)
-;;     (cond ((<= sexp-height window-height)
-;;            (cond ((and (not (lispyy-sexp-centered-p))
-;;                        (not (lispyy-sexp-at-top-p))
-;;                        (not (lispyy-sexp-at-bottom-p)))
-;;                   (lispyy-center-sexp))
-;;                  ((and (lispyy-sexp-centered-p)
-;;                        (not (lispyy-sexp-at-top-p)))
-;;                   (lispyy-view-top-sexp))
-;;                  ((and (lispyy-sexp-at-top-p)
-;;                        (not (lispyy-sexp-at-bottom-p)))
-;;                   (lispyy-view-bottom-sexp))
-;;                  ((and (lispyy-sexp-at-bottom-p)
-;;                        (not (lispyy-view-original-position-p)))
-;;                   (lispyy-view-original-position)
-;;                   (error "Original view position."))))
-;;           ((> sexp-height window-height)
-;;            (cond ((and (not (lispyy-sexp-centered-p))
-;;                        (not (lispyy-sexp-at-top-p))
-;;                        (not (lispyy-sexp-at-bottom-p)))
-;;                   (lispyy-center-sexp))
-;;                  ((and (lispyy-sexp-centered-p)
-;;                        (not (lispyy-sexp-at-top-p)))
-;;                   (lispyy-view-top-sexp))
-;;                  ((and (lispyy-sexp-at-top-p)
-;;                        (not (lispyy-sexp-at-bottom-p)))
-;;                   (lispyy-view-bottom-sexp))
-;;                  ((and (lispyy-sexp-at-bottom-p)
-;;                        (not (lispyy-view-original-position-p)))
-;;                   (lispyy-view-original-position)
-;;                   (error "Original view position.")))))))
-
-;; (defun lispyy-view-2 ()
-;;   "Center sexp, move to top, move to bottom, move to original position, repeat."
-;;   (interactive "p")
-;;   (let ((window-height (window-body-height))
-;;         (sexp-height   (lispyy-sexp-height))
-;;         (window-line   (lispyy-window-line)))
-;;     (lispyy-update-original-view-position)
-;;     (cond ((<= sexp-height window-height)
-;;            (cond ((and (not (lispyy-sexp-centered-p))
-;;                        (not (lispyy-sexp-at-top-p))
-;;                        (not (lispyy-sexp-at-bottom-p)))
-;;                   (lispyy-view-center-position))
-;;                  ((and (lispyy-sexp-centered-p)
-;;                        (not (lispyy-sexp-at-top-p)))
-;;                   (lispyy-view-top-position))
-;;                  ((and (lispyy-sexp-at-top-p)
-;;                        (not (lispyy-sexp-at-bottom-p)))
-;;                   (lispyy-view-bottom-position))))
-;;           ((> sexp-height window-height)
-;;            (cond ((and (not (lispyy-sexp-centered-p))
-;;                        (not (lispyy-sexp-at-top-p))
-;;                        (not (lispyy-sexp-at-bottom-p)))
-;;                   (lispyy-center-sexp))
-;;                  ((and (lispyy-sexp-centered-p)
-;;                        (not (lispyy-sexp-at-top-p)))
-;;                   (lispyy-view-top-sexp))
-;;                  ((and (lispyy-sexp-at-top-p)
-;;                        (not (lispyy-sexp-at-bottom-p)))
-;;                   (lispyy-view-bottom-sexp)))))))
-
-(defun lispyy-view-2 ()
+(defun lispyy-view ()
   "Center sexp, move to top, move to bottom, move to original position, repeat."
   (interactive)
   (let ((window-height (window-body-height))
@@ -2789,35 +2561,20 @@ Second line"
         (window-line   (lispyy-window-line)))
     (lispyy-update-original-view-position)
     (if (<= sexp-height window-height)
-        (cond ((and (not (lispyy-view-top-position-p))
-                    (not (lispyy-view-center-position-p)))
-               (lispyy-view-center-position))
-              ((and (lispyy-view-center-position-p)
-                    (not (lispyy-view-top-position-p)))
-               (lispyy-view-top-position))
-              ((and (lispyy-view-top-position-p)
-                    (not (lispyy-view-bottom-position-p)))
-               (lispyy-view-bottom-position)))
-      (cond ((lispy-left-p)
-             (if (lispyy-view-top-position-p)
-                 (lispyy-view-original-position)
-               (lispyy-view-top-position)))
-            ((lispy-right-p)
-             (if (lispyy-view-bottom-position-p)
-                 (lispyy-view-original-position)
-               (lispyy-view-bottom-position)))))))
-
-;; (defun lispyy-view (&optional arg)
-;;   "Recenter current sexp to first screen line, accounting for scroll-margin.
-;; If already there, return it to previous position."
-;;   (interactive "p")
-;;   (lispy-from-left
-;;    (let ((window-line (count-lines (window-start) (point))))
-;;      (if (or (= window-line scroll-margin)
-;;              (and (not (bolp)) (= window-line (1+ scroll-margin))))
-;;          (recenter (or (get 'lispy-recenter :line) 0))
-;;        (put 'lispy-recenter :line window-line)
-;;        (recenter 0)))))
+        (if (not (lispyy-repeated-command-p))
+            (lispyy-view-center-position)
+          (cond ((and (not (lispyy-view-top-position-p))
+                      (not (lispyy-view-center-position-p))) (lispyy-view-center-position))
+                ((and (lispyy-view-center-position-p)
+                      (not (lispyy-view-top-position-p)))    (lispyy-view-top-position))
+                ((and (lispyy-view-top-position-p)
+                      (not (lispyy-view-bottom-position-p))) (lispyy-view-bottom-position))))
+      (cond ((lispy-left-p)  (if (lispyy-view-top-position-p)
+                                 (lispyy-view-original-position)
+                               (lispyy-view-top-position)))
+            ((lispy-right-p) (if (lispyy-view-bottom-position-p)
+                                 (lispyy-view-original-position)
+                               (lispyy-view-bottom-position)))))))
 
 ;; (lispy-define-key lispy-mode-map "j" 'special-lispyy-down)
 ;; (lispy-define-key lispy-mode-map "k" 'special-lispyy-up)
@@ -2922,46 +2679,15 @@ Second line"
         (setq end-bound (point-max)))
       (msg- end-bound))))
 
-;; (defun lispyy-end-of-section-position ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (save-excursion
-;;     (beginning-of-line)
-;;     (if (not (looking-at ";+"))
-;;         (msg- nil)
-;;       (let* ((semicolons    (match-string 0))
-;;              (prefix-regexp (concat semicolons "$" "\\|" semicolons "[^;]")))
-;;         (while (save-excursion (let ((pt (point)))
-;;                                  (re-search-backward prefix-regexp nil t)
-;;                                  (= (1+ (line-number-at-pos))
-;;                                     (line-number-at-pos pt))))
-;;           (re-search-backward prefix-regexp nil t)))
-;;       (msg- (point)))))
-
 (defun lispyy-section-bounds ()
   "TODO: documentation"
   (interactive)
   (let ((start-bound (lispyy-beginning-of-section-position))
         (end-bound   (lispyy-end-of-section-position))
         bounds)
-    (if (not (and start-bound end-bound))
-        nil
+    (when (and start-bound end-bound)
       (setq bounds (cons start-bound end-bound))
       bounds)))
-
-;; (defun lispyy-section-bounds ()
-;;   "TODO: documentation"
-;;   (interactive)
-;;   (let (start-bound
-;;         end-bound
-;;         bounds)
-;;     (when (not (lispyy-in-header-block-p))
-;;       (lispyy-header-prev))
-;;     (setq start-bound (lispyy-beginning-of-header-block-position))
-;;     (lispyy-header-next)
-;;     (setq end-bound (lispyy-end-of-header-block-position))
-;;     (setq bounds (cons start-bound end-bound))
-;;     bounds))
 
 ;;;;
 ;;;;  Header views
@@ -3158,6 +2884,20 @@ Second line"
   (if (one-window-p t 1)
       (lispy-ace-paren)
     (delete-other-windows)))
+
+(defun delete-other-windows-or-lispyy-ace-parens ()
+  "TODO: documentation"
+  (interactive)
+  (if (one-window-p t 1)
+      (lispyy-ace-parens)
+    (delete-other-windows)))
+
+(defun delete-window-or-lispyy-ace-parens-window ()
+  "TODO: documentation"
+  (interactive)
+  (if (one-window-p t 1)
+      (lispyy-ace-parens-window)
+    (delete-window)))
 
 (defun msg (value)
   "TODO: documentation"

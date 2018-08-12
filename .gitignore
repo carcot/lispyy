@@ -6,7 +6,7 @@
 /*.data
 /*.elc
 #/elpa/
-/Lispyy
+/lispy/
 /project-explorer-cache
 /projectile-bookmarks.eld
 /projectile.cache
